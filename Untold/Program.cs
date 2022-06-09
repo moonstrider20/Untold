@@ -4,7 +4,7 @@ namespace Untold
 {
     class Program
     {
-        private static string Location => Rooms[locationColumn];
+        private static string Location => Rooms[locationColumn,locationRow];
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to Untold!");
@@ -47,10 +47,15 @@ namespace Untold
 
             switch (command)
             {
-                case Commands.NORTH:
-                case Commands.SOUTH:
+                case Commands.NORTH when locationRow < Rooms.GetLength(0) - 1:
+                    locationRow++;
+                    didMove = true;
                     break;
-                case Commands.EAST when locationColumn < Rooms.Length - 1:
+                case Commands.SOUTH when locationRow > 0:
+                    locationRow--;
+                    didMove = true;
+                    break;
+                case Commands.EAST when locationColumn < Rooms.GetLength(1) - 1:
                     locationColumn++;
                     didMove = true;
                     break;
@@ -63,7 +68,12 @@ namespace Untold
             return didMove;
         }
 
-        private static string[] Rooms = { "Forest", "West of House", "Behind House", "Clearing", "Canyon View" };
+        private static readonly string[,] Rooms = {
+            {"Rocky Trail", "South of House", "Canyon View" },
+            {"Forest", "West of House", "Behind House"},
+            {"Dense Woods","North of House","Clearing"}
+        };
         private static int locationColumn = 1;
+        private static int locationRow = 1;
     }
 }
