@@ -1,10 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Untold
 {
-    class Program
+    internal class Program
     {
-        private static string Location => Rooms[locationColumn,locationRow];
+        private static string CurrentRoom
+        {
+            get
+            {
+                return Rooms[Location.Row, Location.Column];
+            }
+        }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Welcome to Untold!");
@@ -12,60 +20,62 @@ namespace Untold
             Commands command = Commands.UNKOWN;
             while (command != Commands.QUIT)
             {
-                Console.Write($"{Location}\n> ");
+                Console.Write($"{CurrentRoom}\n> ");
                 command = ToCommand(Console.ReadLine().Trim());
 
-                string outputString;
                 switch (command)
                 {
                     case Commands.NORTH:
                     case Commands.SOUTH:
                     case Commands.EAST:
                     case Commands.WEST:
-                        outputString = Move(command) ? $"You moved {command}." : "The way is shut!";
+                        if (Move(command) == false)
+                        {
+                            Console.WriteLine("THe way is shut!");
+                        }
                         break;
                     case Commands.LOOK:
-                        outputString = "This is an open field west of a white house.";
+                        Console.WriteLine("This is an open field west of a white house.");
                         break;
                     case Commands.QUIT:
-                        outputString = "Thank you for playing!";
+                        Console.WriteLine("Thank you for playing!");
                         break;
                     default:
-                        outputString = "Unknown command.";
+                        Console.WriteLine("Unknown command.");
                         break;
                 };
-
-                Console.WriteLine(outputString);
             }
         }
 
         private static Commands ToCommand(string commandString) => Enum.TryParse(commandString, true, out Commands result) ? result : Commands.UNKOWN;
+        private static bool IsDirection(Commands command) => Directions.Contains(command);
 
         private static bool Move(Commands command)
         {
-            bool didMove = false;
+            Assert.IsTrue(IsDirection(command), "Invalid direction.");
+
+            bool isValidMove = true;
 
             switch (command)
             {
-                case Commands.NORTH when locationRow < Rooms.GetLength(0) - 1:
-                    locationRow++;
-                    didMove = true;
+                case Commands.NORTH when Location.Row < Rooms.GetLength(0) - 1:
+                    Location.Row++;
                     break;
-                case Commands.SOUTH when locationRow > 0:
-                    locationRow--;
-                    didMove = true;
+                case Commands.SOUTH when Location.Row > 0:
+                    Location.Row--;
                     break;
-                case Commands.EAST when locationColumn < Rooms.GetLength(1) - 1:
-                    locationColumn++;
-                    didMove = true;
+                case Commands.EAST when Location.Column < Rooms.GetLength(1) - 1:
+                    Location.Column++;
                     break;
-                case Commands.WEST when locationColumn > 0:
-                    locationColumn--;
-                    didMove = true;
+                case Commands.WEST when Location.Column > 0:
+                    Location.Column--;
+                    break;
+                default:
+                    isValidMove = false;
                     break;
             }
 
-            return didMove;
+            return isValidMove;
         }
 
         private static readonly string[,] Rooms = {
@@ -73,7 +83,15 @@ namespace Untold
             {"Forest", "West of House", "Behind House"},
             {"Dense Woods","North of House","Clearing"}
         };
-        private static int locationColumn = 1;
-        private static int locationRow = 1;
+
+        private static readonly List<Commands> Directions = new List<Commands>
+        { 
+            Commands.NORTH,
+            Commands.SOUTH,
+            Commands.EAST,
+            Commands.WEST
+        };
+        
+        private static (int Row, int Column) Location = (1,1);
     }
 }
