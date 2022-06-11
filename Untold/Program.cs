@@ -12,14 +12,25 @@ namespace Untold
             InitalizeRoomDescriptions();
             Console.WriteLine("Welcome to Untold!");
 
+            Room previousRoom = null;
             Commands command = Commands.UNKOWN;
             while (command != Commands.QUIT)
             {
-                Console.Write($"{currentRoom}\n> ");
+                Console.WriteLine(currentRoom);
+                
+                if (previousRoom != currentRoom)
+                {
+                    Console.WriteLine(currentRoom.Description);
+                    previousRoom = currentRoom;
+                }
+                Console.Write("> ");
                 command = ToCommand(Console.ReadLine().Trim());
 
                 switch (command)
                 {
+                    case Commands.LOOK:
+                        Console.WriteLine(currentRoom.Description);
+                        break;
                     case Commands.NORTH:
                     case Commands.SOUTH:
                     case Commands.EAST:
@@ -29,16 +40,13 @@ namespace Untold
                             Console.WriteLine("The way is shut!");
                         }
                         break;
-                    case Commands.LOOK:
-                        Console.WriteLine(currentRoom.Description);
-                        break;
                     case Commands.QUIT:
                         Console.WriteLine("Thank you for playing!");
                         break;
                     default:
                         Console.WriteLine("Unknown command.");
                         break;
-                };
+                }
             }
         }
 
@@ -81,17 +89,21 @@ namespace Untold
 
         private static void InitalizeRoomDescriptions()
         {
-            Rooms[0, 0].Description = "You are on a rocky trail.";                      // Rocky Trail
-            Rooms[0, 1].Description = "You are facing the south side of a house.";      // South of House
-            Rooms[0, 2].Description = "You are at the top of a canyon.";                // Canyon View
-            
-            Rooms[1, 0].Description = "This is a forest.";                              // Forest
-            Rooms[1, 1].Description = "This is an open field.";                         // West of House
-            Rooms[1, 2].Description = "You are behind a house.";                        // Behind House
+            var roomMap = new Dictionary<string, Room>();
+            foreach(Room room in Rooms)
+            {
+                roomMap.Add(room.Name, room);
+            }
 
-            Rooms[2, 0].Description = "This is a dimly lit forest.";                    // Dense Woods
-            Rooms[2, 1].Description = "You are facing the north side of a house.";      // North of House
-            Rooms[2, 2].Description = "You are in a clearing.";                         // Clearing
+            roomMap["Rocky Trail"].Description = "You are on a rocky trail.";                      // Rocky Trail
+            roomMap["South of House"].Description = "You are facing the south side of a house.";      // South of House
+            roomMap["Canyon View"].Description = "You are at the top of a canyon.";                // Canyon View
+            roomMap["Forest"].Description = "This is a forest.";                              // Forest
+            roomMap["West of House"].Description = "This is an open field.";                         // West of House
+            roomMap["Behind House"].Description = "You are behind a house.";                        // Behind House
+            roomMap["Dense Woods"].Description = "This is a dimly lit forest.";                    // Dense Woods
+            roomMap["North of House"].Description = "You are facing the north side of a house.";      // North of House
+            roomMap["Clearing"].Description = "You are in a clearing.";                         // Clearing
         }
 
         private static readonly List<Commands> Directions = new List<Commands>
