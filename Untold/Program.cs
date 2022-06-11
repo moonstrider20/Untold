@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Untold
 {
     internal class Program
     {
         private static Room currentRoom => Rooms[Location.Row, Location.Column];
+        private static readonly Dictionary<string, Room> roomMap;
 
         static void Main(string[] args)
         {
-            InitalizeRoomDescriptions();
+            const string defaultRoomsFilename = "Rooms.txt";
+            string roomsDescriptionsFilename = args.Length > 0 ? args[(int)CommandLineArguments.RoomsFilename] : defaultRoomsFilename;
+            InitalizeRoomDescriptions(roomsDescriptionsFilename);
             Console.WriteLine("Welcome to Untold!");
 
             Room previousRoom = null;
@@ -87,23 +92,34 @@ namespace Untold
             { new Room("Dense Woods"),new Room("North of House"), new Room("Clearing")}
         };
 
-        private static void InitalizeRoomDescriptions()
+        static Program()
         {
-            var roomMap = new Dictionary<string, Room>();
+            roomMap = new Dictionary<string, Room>();
             foreach(Room room in Rooms)
             {
                 roomMap.Add(room.Name, room);
             }
+        }
 
-            roomMap["Rocky Trail"].Description = "You are on a rocky trail.";                      // Rocky Trail
-            roomMap["South of House"].Description = "You are facing the south side of a house.";      // South of House
-            roomMap["Canyon View"].Description = "You are at the top of a canyon.";                // Canyon View
-            roomMap["Forest"].Description = "This is a forest.";                              // Forest
-            roomMap["West of House"].Description = "This is an open field.";                         // West of House
-            roomMap["Behind House"].Description = "You are behind a house.";                        // Behind House
-            roomMap["Dense Woods"].Description = "This is a dimly lit forest.";                    // Dense Woods
-            roomMap["North of House"].Description = "You are facing the north side of a house.";      // North of House
-            roomMap["Clearing"].Description = "You are in a clearing.";                         // Clearing
+        private enum CommandLineArguments
+        {
+            RoomsFilename = 0
+        }
+
+        private static void InitalizeRoomDescriptions(string roomsFilename)
+        {
+            const string fieldDelimiter = "##";
+            const int expectedFieldCount = 2;
+            var roomQuery = from line in File.ReadLines(roomsFilename)
+                            let fields = line.Split(fieldDelimiter)
+                            where fields.Length == expectedFieldCount
+                            select (Name: fields[(int)Fields.Name],
+                                    Description: fields[(int)Fields.Description]);
+
+            foreach (var (Name, Description) in roomQuery)
+            {
+                roomMap[Name].Description = Description;
+            }
         }
 
         private static readonly List<Commands> Directions = new List<Commands>
@@ -113,6 +129,12 @@ namespace Untold
             Commands.EAST,
             Commands.WEST
         };
+
+        private enum Fields
+        {
+            Name = 0,
+            Description = 1
+        }
         
         private static (int Row, int Column) Location = (1,1);
     }
