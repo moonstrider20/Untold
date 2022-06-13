@@ -1,0 +1,74 @@
+﻿{
+	"World": {
+		"StartingLocation": "West of House",
+		"Rooms": [
+			{
+				"Name": "West of House",
+				"Description": "This is an open field west of a white house.",
+				"Neighbors": {
+					"North": "North of House",
+					"South": "South of House",
+					"West": "Forest 1"
+				}
+			},
+			{
+				"Name": "North of House",
+				"Description": "You are facing the north side of a white house.",
+				"Neighbors": {
+					"North": "Forest 2",
+					"East": "Behind House",
+					"West": "West of House"
+				}
+				},
+			{
+				"Name": "South of House",
+				"Description": "You are facing the south side of a white house.",
+				"Neighbors": {
+					"East": "Behind House",
+					"West": "West of House"
+				}
+			},
+			{
+				"Name": "Behind House",
+				"Description": "You are behind the white house.",
+				"Neighbors": {
+					"North": "North of House",
+					"South": "South of House",
+					"East": "Clearing"
+				}
+			},
+			{
+				"Name": "Forest 1",
+				"Description": "This is a forest.",
+				"Neighbors": {
+					"South": "Forest 3",
+					"East": "West of House"
+				}
+			},
+			{
+				"Name": "Forest 2",
+				"Description": "This is a dimly lit forest.",
+				"Neighbors": {
+					"East": "Clearing",
+					"West": "Clearing"
+				}
+			},
+			{
+				"Name": "Forest 3",
+				"Description": "This is a dimly lit forest.",
+				"Neighbors": {
+					"North": "South of House",
+					"East": "Clearing"
+				}
+			},
+			{
+				"Name": "Clearing",
+				"Description": "You are in a clearing.",
+				"Neighbors": {
+					"South": "Forest 3",
+					"West": "Forest 2"
+				}
+			}
+		]
+	}
+}
