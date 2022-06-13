@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using Newtonsoft.Json;
 
 namespace Untold
 {
@@ -12,9 +12,9 @@ namespace Untold
 
         static void Main(string[] args)
         {
-            const string defaultRoomsFilename = "Rooms.txt";
+            const string defaultRoomsFilename = "Rooms.json";
             string roomsDescriptionsFilename = args.Length > 0 ? args[(int)CommandLineArguments.RoomsFilename] : defaultRoomsFilename;
-            InitalizeRoomDescriptions(roomsDescriptionsFilename);
+            InitalizeRooms(roomsDescriptionsFilename);
             Console.WriteLine("Welcome to Untold!");
 
             Room previousRoom = null;
@@ -86,41 +86,15 @@ namespace Untold
             return isValidMove;
         }
 
-        private static readonly Room[,] Rooms = {
-            { new Room("Rocky Trail"), new Room("South of House"), new Room("Canyon View") },
-            { new Room("Forest"), new Room("West of House"), new Room("Behind House")},
-            { new Room("Dense Woods"),new Room("North of House"), new Room("Clearing")}
-        };
-
-        static Program()
-        {
-            roomMap = new Dictionary<string, Room>();
-            foreach(Room room in Rooms)
-            {
-                roomMap.Add(room.Name, room);
-            }
-        }
+        private static Room[,] Rooms;
 
         private enum CommandLineArguments
         {
             RoomsFilename = 0
         }
 
-        private static void InitalizeRoomDescriptions(string roomsFilename)
-        {
-            const string fieldDelimiter = "##";
-            const int expectedFieldCount = 2;
-            var roomQuery = from line in File.ReadLines(roomsFilename)
-                            let fields = line.Split(fieldDelimiter)
-                            where fields.Length == expectedFieldCount
-                            select (Name: fields[(int)Fields.Name],
-                                    Description: fields[(int)Fields.Description]);
-
-            foreach (var (Name, Description) in roomQuery)
-            {
-                roomMap[Name].Description = Description;
-            }
-        }
+        private static void InitalizeRooms(string roomsFilename) =>
+            Rooms = JsonConvert.DeserializeObject<Room[,]>(File.ReadAllText(roomsFilename));
 
         private static readonly List<Commands> Directions = new List<Commands>
         { 
