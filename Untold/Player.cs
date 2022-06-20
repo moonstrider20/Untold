@@ -10,6 +10,8 @@ namespace Untold
         [JsonIgnore]
         public Room Location { get; private set; }
 
+        public int Moves { get; set; }
+
         public string LocationName
         {
             get
@@ -27,7 +29,7 @@ namespace Untold
             World = world;
             LocationName = startingLocation;
         }
-
+        
         public bool Move(Directions direction)
         {
             bool isValidMove = Location.Neighbors.TryGetValue(direction, out Room destination);
