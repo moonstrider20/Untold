@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Untold
+﻿namespace Untold
 {
     [CommandClass]
     public static class QuitCommand

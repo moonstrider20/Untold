@@ -62,7 +62,9 @@ namespace Untold
                 }
 
                 Console.Write("\n> ");
-                if (CommandManager.PerformCommand(this, Console.ReadLine().Trim()))
+                inputString = Console.ReadLine().Trim().Split(delimiter);
+
+                if (CommandManager.PerformCommand(this, this.inputString[0]))
                 {
                     Player.Moves++;
                 }
@@ -159,5 +161,9 @@ namespace Untold
 
         private bool mIsRunning;
         private bool mIsRestarting;
+
+        public string[] inputString;
+        public char delimiter = ' ';
+        public bool responseInput = false;
     }
 }

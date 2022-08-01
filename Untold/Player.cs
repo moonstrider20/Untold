@@ -10,7 +10,11 @@ namespace Untold
         [JsonIgnore]
         public Room Location { get; private set; }
 
+        [JsonIgnore]
         public int Moves { get; set; }
+
+        [JsonIgnore]
+        public int Score { get; set; }
 
         public string LocationName
         {
@@ -40,5 +44,7 @@ namespace Untold
 
             return isValidMove;
         }
+
+        public Dictionary<string, Item> Inventory { get; private set; } = new Dictionary<string, Item>();
     }
 }
