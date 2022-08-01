@@ -1,4 +1,5 @@
 ﻿{
+	"WelcomeMessage":  "Welcome to UNTOLD.",
 	"World": {
 		"StartingLocation": "West of House",
 		"Rooms": [
@@ -19,7 +20,7 @@
 					"East": "Behind House",
 					"West": "West of House"
 				}
-				},
+			},
 			{
 				"Name": "South of House",
 				"Description": "You are facing the south side of a white house.",

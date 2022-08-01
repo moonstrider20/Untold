@@ -9,9 +9,7 @@ namespace Untold
             const string defaultGameFilename = "Untold.json";
             string gameFilename = args.Length > 0 ? args[(int)CommandLineArguments.GameFilename] : defaultGameFilename;
 
-            Game game = Game.Load(gameFilename);
-            Console.WriteLine("Welcome to Untold!");
-            game.Run();
+            Game.Start(gameFilename);
             Console.WriteLine("Thank you for playing!");
         }
 
